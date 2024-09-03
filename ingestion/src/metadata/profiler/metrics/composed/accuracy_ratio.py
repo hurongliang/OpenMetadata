@@ -10,7 +10,7 @@
 #  limitations under the License.
 
 """
-Distinct Ratio Composed Metric definition
+Accuracy Ratio Composed Metric definition
 """
 # pylint: disable=duplicate-code
 
@@ -46,13 +46,13 @@ class AccuracyRatio(ComposedMetric):
 
     def fn(self, res: Dict[str, Any]) -> Optional[float]:
         """
-        Safely compute distinct ratio based on the profiler
+        Safely compute accuracy ratio based on the profiler
         results of other Metrics
         """
-        res_count = res.get(Count.name())
-        res_distinct = res.get(AccuracyCount.name())
-
-        if res_count and res_distinct is not None:
-            return res_distinct / res_count
+        count = res.get(Count.name())
+        accuracy_count = res.get(AccuracyCount.name())
+        if count and accuracy_count is not None:
+            return accuracy_count / count
 
         return None
+

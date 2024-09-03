@@ -10,28 +10,36 @@
 #  limitations under the License.
 
 """
-Distinct Count Metric definition
+Accuracy Count Metric definition
 """
 # pylint: disable=duplicate-code
 
-import json
-
-from sqlalchemy import column, distinct, func
+from sqlalchemy import case, column
 
 from metadata.generated.schema.configuration.profilerConfiguration import MetricType
 from metadata.profiler.metrics.core import StaticMetric, _label
-from metadata.profiler.orm.functions.count import CountFn
-from metadata.utils.logger import profiler_logger
-
-logger = profiler_logger()
+from metadata.profiler.orm.functions.sum import SumFn
+from metadata.profiler.orm.registry import is_concatenable
 
 
 class AccuracyCount(StaticMetric):
     """
     ACCURACY_COUNT Metric
-
-    Given a column, count the number of distinct values
     """
+
+    REG_LIST = [
+        ('phone', r"^[0-9]{10}$"),
+        ('email', r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"),
+        ('postcode', r"^[0-9]{6}$"),
+        ('address', r'^(?P<province>[^省]+省|[^市]+市|[^区]+区|[^县]+县)?(?P<city>[^市]+市|[^区]+区|[^县]+县)?(?P<district>[^区]+区|[^县]+县)?(?P<county>[^镇]+镇|[^乡]+乡)?[^省市区县]*$'),
+        ('idnumder', r"^\d{6}(19|20)\d{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])\d{3}(\d|X|x)$"),
+        ('bankcardnumber', r"^\d{6,20}$"),
+        ('date', r"^(19|20)\d{2}[-/年](0[1-9]|1[012])[-/月](0[1-9]|[12][0-9]|3[01])$|^19\d{2}(0[1-9]|1[012])(0[1-9]|[12][0-9]|3[01])$|^19\d{2}年(0[1-9]|1[012])月(0[1-9]|[12][0-9]|3[01])日.*$"),
+        ('ipaddress', r"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"),
+        ('url', r"^(http|https|ftp)://[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}(:[0-9]{1,5})?(/.*)?$"),
+        ('currency', r"^(¥|CNY|US$|USD|HK\$|HKD|€|EUR|£|GBP|JP¥|JPY)?(\d+|\d{1,3}(,\d{3})*)(\.\d{1,2})?$"),
+        ('chinesename', r"^[\u4e00-\u9fa5]{1,3}$"),
+    ]
 
     @classmethod
     def name(cls):
@@ -41,36 +49,46 @@ class AccuracyCount(StaticMetric):
     def metric_type(self):
         return int
 
+    def _is_concatenable(self):
+        return is_concatenable(self.col.type)
+
     @_label
     def fn(self):
-        """
-        Accuracy Count metric for Sqlalchemy connectors
-        """
-        return func.count(distinct(CountFn(column(self.col.name, self.col.type))))
-
-    def df_fn(self, dfs=None):
-        """
-        Accuracy Count metric for Datalake
-        """
-        # pylint: disable=import-outside-toplevel
-        from collections import Counter
-
-        try:
-            counter = Counter()
-            for df in dfs:
-                df_col_value = df[self.col.name].dropna().to_list()
-                try:
-                    counter.update(df_col_value)
-                except TypeError as err:
-                    if isinstance(df_col_value, list):
-                        for value in df_col_value:
-                            counter.update([json.dumps(value)])
-                    else:
-                        raise err
-            return len(counter.keys())
-        except Exception as err:
-            logger.debug(
-                f"Don't know how to process type {self.col.type}"
-                f" when computing Accuracy Count.\n Error: {err}"
+        """sqlalchemy function"""
+        max_of_sum = 0
+        for reg in self.REG_LIST:
+            expression = reg[1]
+            this_sum = SumFn(
+                case(
+                    [
+                        (
+                            column(self.col.name, self.col.type).regexp_match(expression),
+                            1,
+                        )
+                    ],
+                    else_=0,
+                )
             )
-            return 0
+            if this_sum > max_of_sum:
+                max_of_sum = this_sum
+        return max_of_sum
+
+    def df_fn(self, dfs):
+        """pandas function"""
+
+        if self._is_concatenable():
+            max_of_sum = 0
+            for reg in self.REG_LIST:
+                expression = reg[1]
+                this_sum = sum(
+                    df[self.col.name][
+                        df[self.col.name].astype(str).str.contains(expression)
+                    ].count()
+                    for df in dfs
+                )
+                if this_sum > max_of_sum:
+                    max_of_sum = this_sum
+            return max_of_sum
+        raise TypeError(
+            f"Don't know how to process type {self.col.type} when computing Accuracy Match Count"
+        )
