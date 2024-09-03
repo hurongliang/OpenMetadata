@@ -517,6 +517,10 @@
           "description": "Proportion of distinct values in a column.",
           "type": "number"
         },
+        "accuracyCount": {
+          "description": "Number of values that contain accuracy values.",
+          "type": "number"
+        },
         "min": {
           "description": "Minimum value in a column.",
           "oneOf": [
