@@ -50,6 +50,7 @@ def get_default_metrics(
         Metrics.COUNT.value,
         Metrics.DISTINCT_COUNT.value,
         Metrics.DISTINCT_RATIO.value,
+        Metrics.ACCURACY_COUNT.value,
         Metrics.MIN.value,
         Metrics.MAX.value,
         Metrics.NULL_COUNT.value,

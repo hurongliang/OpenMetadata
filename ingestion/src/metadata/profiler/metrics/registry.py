@@ -32,6 +32,7 @@ from metadata.profiler.metrics.static.column_names import ColumnNames
 from metadata.profiler.metrics.static.count import Count
 from metadata.profiler.metrics.static.count_in_set import CountInSet
 from metadata.profiler.metrics.static.distinct_count import DistinctCount
+from metadata.profiler.metrics.static.accuracy_count import AccuracyCount
 from metadata.profiler.metrics.static.ilike_count import ILikeCount
 from metadata.profiler.metrics.static.like_count import LikeCount
 from metadata.profiler.metrics.static.max import Max
@@ -68,6 +69,7 @@ class Metrics(MetricRegistry):
     COUNT_IN_SET = CountInSet
     COLUMN_COUNT = ColumnCount
     DISTINCT_COUNT = DistinctCount
+    ACCURACY_COUNT = AccuracyCount
     DISTINCT_RATIO = DistinctRatio
     ILIKE_COUNT = ILikeCount
     LIKE_COUNT = LikeCount
