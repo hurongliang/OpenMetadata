@@ -18,6 +18,7 @@
         "distinctCount",
         "distinctProportion",
         "accuracyCount",
+        "accuracyProportion",
         "iLikeCount",
         "likeCount",
         "notLikeCount",

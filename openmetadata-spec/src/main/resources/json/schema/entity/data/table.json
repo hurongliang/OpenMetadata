@@ -521,6 +521,10 @@
           "description": "Number of values that contain accuracy values.",
           "type": "number"
         },
+        "accuracyProportion": {
+          "description": "Proportion of accuracy values in a column.",
+          "type": "number"
+        },
         "min": {
           "description": "Minimum value in a column.",
           "oneOf": [

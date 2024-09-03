@@ -19,6 +19,7 @@ that allows us to directly call our metrics without
 having the verbosely pass .value all the time...
 """
 from metadata.profiler.metrics.composed.distinct_ratio import DistinctRatio
+from metadata.profiler.metrics.composed.accuracy_ratio import AccuracyRatio
 from metadata.profiler.metrics.composed.duplicate_count import DuplicateCount
 from metadata.profiler.metrics.composed.ilike_ratio import ILikeRatio
 from metadata.profiler.metrics.composed.iqr import InterQuartileRange
@@ -69,8 +70,9 @@ class Metrics(MetricRegistry):
     COUNT_IN_SET = CountInSet
     COLUMN_COUNT = ColumnCount
     DISTINCT_COUNT = DistinctCount
-    ACCURACY_COUNT = AccuracyCount
     DISTINCT_RATIO = DistinctRatio
+    ACCURACY_COUNT = AccuracyCount
+    ACCURACY_RATIO = AccuracyRatio
     ILIKE_COUNT = ILikeCount
     LIKE_COUNT = LikeCount
     NOT_LIKE_COUNT = NotLikeCount
