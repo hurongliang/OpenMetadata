@@ -48,6 +48,7 @@ export const excludedMetrics = [
   'missingCount',
   'missingPercentage',
   'distinctProportion',
+  'accuracyProportion',
 ];
 
 export const PROFILER_METRIC = [
@@ -63,6 +64,8 @@ export const PROFILER_METRIC = [
   'uniqueProportion',
   'distinctCount',
   'distinctProportion',
+  'accuracyCount',
+  'accuracyProportion',
   'min',
   'max',
   'minLength',
@@ -176,6 +179,13 @@ export const INITIAL_PROPORTION_METRIC_VALUE = {
         entity: t('label.distinct'),
       }),
       dataKey: 'distinctProportion',
+      color: '#1890FF',
+    },
+    {
+      title: t('label.entity-proportion', {
+        entity: t('label.accuracy'),
+      }),
+      dataKey: 'accuracyProportion',
       color: '#1890FF',
     },
     {

@@ -178,6 +178,7 @@ class RedshiftCliTest(CliCommonDB.TestSuite, SQACommonMethods):
                     "totalprice": {
                         "distinctCount": 22.0,
                         "distinctProportion": 1.0,
+                        "accuracyProportion": 1.0,
                         "duplicateCount": None,
                         "firstQuartile": -451.0775,
                         "histogram": {

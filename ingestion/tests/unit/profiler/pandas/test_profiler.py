@@ -209,6 +209,7 @@ class ProfilerTest(TestCase):
             uniqueProportion=0.5,
             distinctCount=3.0,
             distinctProportion=0.75,
+            accuracyProportion=0.75,
             min=30.0,
             max=32.0,
             minLength=None,

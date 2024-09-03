@@ -184,6 +184,7 @@ class HiveCliTest(CliCommonDB.TestSuite, SQACommonMethods):
                         "uniqueProportion": 1,
                         "distinctCount": 6,
                         "distinctProportion": 1,
+                        "accuracyProportion": 1,
                         "min": 1,
                         "max": 6,
                         "minLength": None,

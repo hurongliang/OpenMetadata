@@ -145,6 +145,7 @@ class MSSQLCliTest(CliCommonDB.TestSuite, SQACommonMethods):
                     "person_id": {
                         "distinctCount": 3.0,
                         "distinctProportion": 1.0,
+                        "accuracyProportion": 1.0,
                         "duplicateCount": None,
                         "firstQuartile": 2.5,
                         "histogram": {

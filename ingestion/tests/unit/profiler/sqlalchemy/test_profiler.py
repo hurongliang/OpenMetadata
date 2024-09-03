@@ -171,6 +171,7 @@ class ProfilerTest(TestCase):
             variance=None,
             distinctCount=2.0,
             distinctProportion=1.0,
+            accuracyProportion=1.0,
             median=30.0,
             timestamp=age_profile.timestamp,
             firstQuartile=30.0,

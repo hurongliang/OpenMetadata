@@ -208,16 +208,25 @@ export const calculateColumnProfilerMetrics = ({
     if (
       isHasKey(col, [
         'distinctProportion',
+        'accuracyProportion',
         'nullProportion',
         'uniqueProportion',
       ])
     ) {
-      const { distinctProportion, nullProportion, uniqueProportion } = col;
+      const {
+        distinctProportion,
+        accuracyProportion,
+        nullProportion,
+        uniqueProportion,
+      } = col;
       proportionMetricData.push({
         ...defaultData,
         distinctProportion: isUndefined(distinctProportion)
           ? undefined
           : Math.round(distinctProportion * 100),
+        accuracyProportion: isUndefined(accuracyProportion)
+          ? undefined
+          : Math.round(accuracyProportion * 100),
         nullProportion: isUndefined(nullProportion)
           ? undefined
           : Math.round(nullProportion * 100),

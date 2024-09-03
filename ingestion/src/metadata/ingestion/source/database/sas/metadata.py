@@ -406,6 +406,10 @@ class SasSource(
                     col_profile_dict["nullProportion"] = (
                         col_profile_dict["nullCount"] / col_profile_dict["valuesCount"]
                     )
+                if "accuracyCount" in col_profile_dict:
+                    col_profile_dict["accuracyProportion"] = (
+                        col_profile_dict["accuracyCount"] / col_profile_dict["valuesCount"]
+                    )
                 if "missingCount" in col_profile_dict:
                     col_profile_dict["missingPercentage"] = (
                         col_profile_dict["missingCount"]

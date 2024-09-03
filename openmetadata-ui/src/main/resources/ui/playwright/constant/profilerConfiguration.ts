@@ -17,6 +17,8 @@ const metrics = [
   'countInSet',
   'distinctCount',
   'distinctProportion',
+  'accuracyCount',
+  'accuracyProportion',
   'duplicateCount',
   'firstQuartile',
   'histogram',
