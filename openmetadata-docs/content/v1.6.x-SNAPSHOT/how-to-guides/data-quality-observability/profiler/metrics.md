@@ -94,6 +94,10 @@ The number of different items in a column. E.g., `[1, 2, 2, 3, 3, 4] => [1, 2, 3
 
 Distinct Count / Values Count
 
+### Accuracy Proportion
+
+Accuracy Count / Values Count
+
 ### Min
 
 Only for numerical values. Returns the minimum.
