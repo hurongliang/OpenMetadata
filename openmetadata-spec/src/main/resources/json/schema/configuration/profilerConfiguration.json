@@ -17,6 +17,7 @@
         "columnCount",
         "distinctCount",
         "distinctProportion",
+        "accuracyCount",
         "iLikeCount",
         "likeCount",
         "notLikeCount",
