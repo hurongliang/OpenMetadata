@@ -29,7 +29,7 @@ class AccuracyChineseNameCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r"^[\u4e00-\u9fa5]{1,3}$"
+    expression = r"^[\u4e00-\u9fa5]{2,3}$"
 
     @classmethod
     def name(cls):

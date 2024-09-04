@@ -29,7 +29,7 @@ class AccuracyPhoneCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r"^[0-9]{10}$"
+    expression = r"/^1[3|4|5|7|8][0-9]{9}$/"
 
     @classmethod
     def name(cls):

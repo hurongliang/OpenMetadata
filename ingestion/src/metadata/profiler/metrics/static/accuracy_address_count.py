@@ -29,7 +29,7 @@ class AccuracyAddressCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r'^(?:[\u4e00-\u9fa5]+(?:省|自治区|直辖市)\s*)?(?:[\u4e00-\u9fa5]+市\s*)?(?:[\u4e00-\u9fa5]+(?:区|县)\s*)?.+$'
+    expression = r"^.+?(省|市|区|县).{3,}$"
 
     @classmethod
     def name(cls):

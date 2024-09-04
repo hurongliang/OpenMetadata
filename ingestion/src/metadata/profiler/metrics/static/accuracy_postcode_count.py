@@ -29,7 +29,7 @@ class AccuracyPostCodeCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r"^[0-9]{6}$"
+    expression = r"^[1-9]\\d{5}$"
 
     @classmethod
     def name(cls):
