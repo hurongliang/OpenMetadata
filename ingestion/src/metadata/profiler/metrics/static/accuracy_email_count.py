@@ -29,7 +29,7 @@ class AccuracyEmailCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    expression = r"^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\s*[,;]?\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})*$"
 
     @classmethod
     def name(cls):

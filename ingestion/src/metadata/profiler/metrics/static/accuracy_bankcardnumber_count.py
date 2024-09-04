@@ -29,7 +29,7 @@ class AccuracyBankCardNumberCount(StaticMetric):
     ACCURACY_COUNT Metric
     """
 
-    expression = r"^(62[0-5]\d{13,16})|(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})$"
+    expression = r"^(62[0-5]\d{13,16}|4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14})$"
 
     @classmethod
     def name(cls):

@@ -88,6 +88,8 @@ class AccuracyRatio(ComposedMetric):
                 max_type = type
         
         ratio = max_count / total_count
-        logger.info(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
-        return ratio
+        if ratio >= 0.5:
+            logger.info(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
+            return ratio
+        return 0
 
