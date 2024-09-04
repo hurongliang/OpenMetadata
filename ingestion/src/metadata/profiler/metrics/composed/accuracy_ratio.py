@@ -19,8 +19,20 @@ from typing import Any, Dict, Optional, Tuple
 from metadata.generated.schema.configuration.profilerConfiguration import MetricType
 from metadata.profiler.metrics.core import ComposedMetric
 from metadata.profiler.metrics.static.count import Count
-from metadata.profiler.metrics.static.accuracy_count import AccuracyCount
+from metadata.profiler.metrics.static.accuracy_address_count import AccuracyAddressCount
+from metadata.profiler.metrics.static.accuracy_bankcardnumber_count import AccuracyBankCardNumberCount
+from metadata.profiler.metrics.static.accuracy_chinesename_count import AccuracyChineseNameCount
+from metadata.profiler.metrics.static.accuracy_date_count import AccuracyDateCount
+from metadata.profiler.metrics.static.accuracy_email_count import AccuracyEmailCount
+from metadata.profiler.metrics.static.accuracy_idnumder_count import AccuracyIdNumberCount
+from metadata.profiler.metrics.static.accuracy_ipaddress_count import AccuracyIpAddressCount
+from metadata.profiler.metrics.static.accuracy_phone_count import AccuracyPhoneCount
+from metadata.profiler.metrics.static.accuracy_postcode_count import AccuracyPostCodeCount
+from metadata.profiler.metrics.static.accuracy_url_count import AccuracyUrlCount
 
+from metadata.utils.logger import profiler_logger
+
+logger = profiler_logger()
 
 class AccuracyRatio(ComposedMetric):
     """
@@ -34,7 +46,10 @@ class AccuracyRatio(ComposedMetric):
 
     @classmethod
     def required_metrics(cls) -> Tuple[str, ...]:
-        return Count.name(), AccuracyCount.name()
+        return (Count.name(), AccuracyAddressCount.name(), AccuracyBankCardNumberCount.name(),
+            AccuracyChineseNameCount.name(), AccuracyDateCount.name(), AccuracyEmailCount.name(),
+            AccuracyIdNumberCount.name(), AccuracyIpAddressCount.name(), AccuracyPhoneCount.name(),
+            AccuracyPostCodeCount.name(), AccuracyUrlCount.name())
 
     @property
     def metric_type(self):
@@ -49,10 +64,30 @@ class AccuracyRatio(ComposedMetric):
         Safely compute accuracy ratio based on the profiler
         results of other Metrics
         """
-        count = res.get(Count.name())
-        accuracy_count = res.get(AccuracyCount.name())
-        if count and accuracy_count is not None:
-            return accuracy_count / count
-
-        return None
+        total_count = res.get(Count.name())
+        count1 = 'address', res.get(AccuracyAddressCount.name())
+        count2 = 'bankcardnumber', res.get(AccuracyBankCardNumberCount.name())
+        count3 = 'chinesename', res.get(AccuracyChineseNameCount.name())
+        count4 = 'date', res.get(AccuracyDateCount.name())
+        count5 = 'email', res.get(AccuracyEmailCount.name())
+        count6 = 'idnumber', res.get(AccuracyIdNumberCount.name())
+        count7 = 'ipaddress', res.get(AccuracyIpAddressCount.name())
+        count8 = 'phone', res.get(AccuracyPhoneCount.name())
+        count9 = 'postcode', res.get(AccuracyPostCodeCount.name())
+        count10 = 'url', res.get(AccuracyUrlCount.name())
+        if not total_count:
+            logger.info(f"total_count is not valid: {total_count}")
+            return None
+        
+        max_count = 0
+        max_type = None
+        counts = [count1, count2, count3, count4, count5, count6, count7, count8, count9, count10]
+        for type, a_count in counts:
+            if a_count is not None and a_count > max_count:
+                max_count = a_count
+                max_type = type
+        
+        ratio = max_count / total_count
+        logger.info(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
+        return ratio
 

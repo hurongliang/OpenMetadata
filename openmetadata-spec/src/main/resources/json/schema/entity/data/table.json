@@ -517,8 +517,48 @@
           "description": "Proportion of distinct values in a column.",
           "type": "number"
         },
-        "accuracyCount": {
-          "description": "Number of values that contain accuracy values.",
+        "accuracyAddressCount": {
+          "description": "Number of values that contain address accuracy values.",
+          "type": "number"
+        },
+        "accuracyBankCardNumberCount": {
+          "description": "Number of values that contain bank card accuracy values.",
+          "type": "number"
+        },
+        "accuracyChineseNameCount": {
+          "description": "Number of values that contain chinese name accuracy values.",
+          "type": "number"
+        },
+        "accuracyCurrencyCount": {
+          "description": "Number of values that contain currency accuracy values.",
+          "type": "number"
+        },
+        "accuracyDateCount": {
+          "description": "Number of values that contain date accuracy values.",
+          "type": "number"
+        },
+        "accuracyEmailCount": {
+          "description": "Number of values that contain email accuracy values.",
+          "type": "number"
+        },
+        "accuracyIdNumberCount": {
+          "description": "Number of values that contain id number accuracy values.",
+          "type": "number"
+        },
+        "accuracyIpAddressCount": {
+          "description": "Number of values that contain ip address accuracy values.",
+          "type": "number"
+        },
+        "accuracyPhoneCount": {
+          "description": "Number of values that contain phone accuracy values.",
+          "type": "number"
+        },
+        "accuracyPostCodeCount": {
+          "description": "Number of values that contain post code accuracy values.",
+          "type": "number"
+        },
+        "accuracyUrlCount": {
+          "description": "Number of values that contain url accuracy values.",
           "type": "number"
         },
         "accuracyProportion": {

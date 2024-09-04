@@ -33,7 +33,16 @@ from metadata.profiler.metrics.static.column_names import ColumnNames
 from metadata.profiler.metrics.static.count import Count
 from metadata.profiler.metrics.static.count_in_set import CountInSet
 from metadata.profiler.metrics.static.distinct_count import DistinctCount
-from metadata.profiler.metrics.static.accuracy_count import AccuracyCount
+from metadata.profiler.metrics.static.accuracy_address_count import AccuracyAddressCount
+from metadata.profiler.metrics.static.accuracy_bankcardnumber_count import AccuracyBankCardNumberCount
+from metadata.profiler.metrics.static.accuracy_chinesename_count import AccuracyChineseNameCount
+from metadata.profiler.metrics.static.accuracy_date_count import AccuracyDateCount
+from metadata.profiler.metrics.static.accuracy_email_count import AccuracyEmailCount
+from metadata.profiler.metrics.static.accuracy_idnumder_count import AccuracyIdNumberCount
+from metadata.profiler.metrics.static.accuracy_ipaddress_count import AccuracyIpAddressCount
+from metadata.profiler.metrics.static.accuracy_phone_count import AccuracyPhoneCount
+from metadata.profiler.metrics.static.accuracy_postcode_count import AccuracyPostCodeCount
+from metadata.profiler.metrics.static.accuracy_url_count import AccuracyUrlCount
 from metadata.profiler.metrics.static.ilike_count import ILikeCount
 from metadata.profiler.metrics.static.like_count import LikeCount
 from metadata.profiler.metrics.static.max import Max
@@ -71,7 +80,16 @@ class Metrics(MetricRegistry):
     COLUMN_COUNT = ColumnCount
     DISTINCT_COUNT = DistinctCount
     DISTINCT_RATIO = DistinctRatio
-    ACCURACY_COUNT = AccuracyCount
+    ACCURACY_ADDRESS_COUNT = AccuracyAddressCount
+    ACCURACY_BANKCARDNUMBER_COUNT = AccuracyBankCardNumberCount
+    ACCURACY_CHINESENAME_COUNT = AccuracyChineseNameCount
+    ACCURACY_DATE_COUNT = AccuracyDateCount
+    ACCURACY_EMAIL_COUNT = AccuracyEmailCount
+    ACCURACY_IDNUMBER_COUNT = AccuracyIdNumberCount
+    ACCURACY_IPADDRESS_COUNT = AccuracyIpAddressCount
+    ACCURACY_PHONE_COUNT = AccuracyPhoneCount
+    ACCURACY_POSTCODE_COUNT = AccuracyPostCodeCount
+    ACCURACY_URL_COUNT = AccuracyUrlCount
     ACCURACY_RATIO = AccuracyRatio
     ILIKE_COUNT = ILikeCount
     LIKE_COUNT = LikeCount

@@ -165,6 +165,7 @@ class PandasProfilerInterface(ProfilerInterface, PandasInterfaceMixin):
             row_dict = {}
             df_list = [df.where(pd.notnull(df), None) for df in runner]
             for metric in metrics:
+                logger.info(f"1Computing {metric.name()}")
                 row_dict[metric.name()] = metric().df_fn(df_list)
             return row_dict
         except Exception as exc:
@@ -280,6 +281,7 @@ class PandasProfilerInterface(ProfilerInterface, PandasInterfaceMixin):
         custom_metrics = []
 
         for metric in metrics:
+            logger.info(f"2Computing {metric.name.root}")
             try:
                 row = sum(
                     len(df.query(metric.expression).index)
