@@ -883,6 +883,7 @@
     "profile-lowercase": "プロファイル",
     "profile-name": "Profile Name",
     "profile-sample-type": "サンプル{{type}}のプロファイル",
+    "profile-table-accuracy-proportion": "Accuracy Proportion",
     "profiler": "プロファイラ",
     "profiler-amp-data-quality": "プロファイラとデータ品質",
     "profiler-configuration": "Profiler Configuration",

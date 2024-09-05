@@ -883,6 +883,7 @@
     "profile-lowercase": "分析",
     "profile-name": "分析器名称",
     "profile-sample-type": "分析样本{{type}}",
+    "profile-table-accuracy-proportion": "准确度",
     "profiler": "分析器",
     "profiler-amp-data-quality": "数据分析质控",
     "profiler-configuration": "分析器配置",

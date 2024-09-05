@@ -883,6 +883,7 @@
     "profile-lowercase": "perfil",
     "profile-name": "Nome do Perfil",
     "profile-sample-type": "Amostra de Perfil {{type}}",
+    "profile-table-accuracy-proportion": "Accuracy Proportion",
     "profiler": "Profiler",
     "profiler-amp-data-quality": "Profiler & Qualidade de Dados",
     "profiler-configuration": "Profiler Configuration",
