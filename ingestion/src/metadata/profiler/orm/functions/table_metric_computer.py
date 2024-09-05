@@ -21,6 +21,7 @@ from typing import Callable, List, Optional, Tuple
 from sqlalchemy import Column, MetaData, Table, func, inspect, literal, select
 from sqlalchemy.sql.expression import ColumnOperators, and_, cte
 from sqlalchemy.types import String
+from sqlalchemy.engine.row import Row
 
 from metadata.generated.schema.entity.data.table import Table as OMTable
 from metadata.generated.schema.entity.data.table import TableType
@@ -36,6 +37,7 @@ COLUMN_NAMES = "columnNames"
 ROW_COUNT = Metrics.ROW_COUNT().name()
 SIZE_IN_BYTES = "sizeInBytes"
 CREATE_DATETIME = "createDateTime"
+TABLE_ACCURACY_PROPORTION = "tableAccuracyProportion"
 
 ERROR_MSG = (
     "Schema/Table name not found in table args. Falling back to default computation"
@@ -124,6 +126,75 @@ class AbstractTableMetricComputer(ABC):
         )
         col_count = literal(len(inspect(self.table).c)).label(COLUMN_COUNT)
         return col_names, col_count
+    
+    def _to_int(self, val):
+        logger.info(f"val {val} type: {type(val)}")
+        new_val = val
+        if isinstance(new_val, Row):
+            new_val = new_val[0]
+        try:
+            a_dict = new_val._asdict()
+            new_val = next(iter(a_dict.values()), None)
+        except AttributeError:
+            logger.error(f"asdict failed, new_val {new_val} type: {type(new_val)}")
+        logger.info(f"new_val {new_val} type: {type(new_val)}")
+        if new_val is None:
+            new_val = 0
+        new_val = int(new_val)
+        logger.info(f"original val: {val}, new_val: {new_val}")
+        return new_val
+    
+    def _get_accuracy_ratio(self, col_name: str) -> Optional[float]:
+        col = Column(col_name)
+        logger.info(f"col_name {col_name}")
+        total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())
+        count1 = self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())
+        count2 = self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())
+        count3 = self.runner.select_first_from_table(Metrics.ACCURACY_DATE_COUNT(col=col).fn())
+        count4 = self.runner.select_first_from_table(Metrics.ACCURACY_EMAIL_COUNT(col=col).fn())
+        count5 = self.runner.select_first_from_table(Metrics.ACCURACY_IDNUMBER_COUNT(col=col).fn())
+        count6 = self.runner.select_first_from_table(Metrics.ACCURACY_IPADDRESS_COUNT(col=col).fn())
+        count7 = self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())
+        count8 = self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())
+        count9 = self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())
+        total_count = self._to_int(total_count)
+        counts = [count1, count2, count3, count4, count5, count6, count7, count8, count9]
+        logger.info(f"total_count: {total_count}")
+        logger.info(f"counts: {counts}")
+        max_count = 0
+        if total_count is None or total_count == 0:
+            return 0
+        for cur_count in counts:
+            logger.info(f"cur_count: {cur_count}")
+            cur_count_int = self._to_int(cur_count)
+            logger.info(f"cur_count_int: {cur_count_int}")
+            if cur_count_int > max_count:
+                max_count = cur_count_int
+        logger.info(f"max_count: {max_count}")
+        max_ratio = max_count / total_count
+        logger.info(f"ratio: {max_ratio}")
+        return max_ratio
+    
+    def _get_table_accuracy_proportion(self, col_names) -> float:
+        """get accuracy proportion from table"""
+        logger.info("Computing accuracy proportion")
+        logger.info(f"Column names: {col_names}")
+        if not col_names:
+            return "0.00%"
+        col_names = col_names.split(",")
+        all_ratio = []
+        for col_name in col_names:
+            cur_ratio = self._get_accuracy_ratio(col_name)
+            logger.info(f"col_name: {col_name}, cur_ratio: {cur_ratio}")
+            if cur_ratio is not None and cur_ratio >= 0.5:
+                all_ratio.append(cur_ratio)
+        if len(all_ratio) == 0:
+            accuracy_ratio = 0
+        else:
+            accuracy_ratio = sum(all_ratio) / len(all_ratio)
+        logger.info(f"Table Accuracy proportion: {accuracy_ratio}")
+        # format as percent
+        return f"{accuracy_ratio:.2%}"
 
     def _build_query(
         self,
@@ -357,12 +428,15 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
 
     def compute(self):
         """compute table metrics for mysql"""
+        logger.info("Computing table metrics for MySQL")
+        col_names_and_count = self._get_col_names_and_count()
+        print(f"col_names_and_count: {col_names_and_count}")
 
         columns = [
             Column("TABLE_ROWS").label(ROW_COUNT),
             (Column("data_length") + Column("index_length")).label(SIZE_IN_BYTES),
             Column("CREATE_TIME").label(CREATE_DATETIME),
-            *self._get_col_names_and_count(),
+            *col_names_and_count,
         ]
         where_clause = [
             Column("TABLE_SCHEMA") == self.schema_name,
@@ -381,10 +455,16 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
             # if we don't have any row count, fallback to the base logic
             return super().compute()
         res = res._asdict()
+        print(f"res after computing: {res}")
         # innodb row count is an estimate we need to patch the row count with COUNT(*)
         # https://dev.mysql.com/doc/refman/8.3/en/information-schema-innodb-tablestats-table.html
         row_count = self.runner.select_first_from_table(Metrics.ROW_COUNT().fn())
         res.update({ROW_COUNT: row_count.rowCount})
+        columnNames = res.get(COLUMN_NAMES, '')
+        try:
+            res.update({TABLE_ACCURACY_PROPORTION: self._get_table_accuracy_proportion(columnNames)})
+        except Exception as exc:
+            logger.error(f"Error computing table accuracy proportion: {str(exc)}", exc_info=True)
         return res
 
 

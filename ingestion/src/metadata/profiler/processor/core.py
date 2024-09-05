@@ -591,6 +591,7 @@ class Profiler(Generic[TMetric]):
                 rowCount=self._table_results.get(RowCount.name()),
                 createDateTime=raw_create_date,
                 sizeInByte=self._table_results.get("sizeInBytes"),
+                tableAccuracyProportion=self._table_results.get("tableAccuracyProportion"),
                 profileSample=(
                     self.profile_sample_config.profile_sample
                     if self.profile_sample_config

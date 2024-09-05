@@ -586,6 +586,7 @@ class SasSource(
                         rowCount=int(table_extension.get("rowCount", 0)),
                         columnCount=int(table_extension.get("columnCount", 0)),
                         sizeInByte=int(table_extension.get("dataSize", 0)),
+                        tableAccuracyProportion=table_extension.get("tableAccuracyProportion", "0.00%"),
                     ),
                     columnProfile=col_profile_list,
                 )

@@ -854,6 +854,10 @@
           "description": "Table size in GB",
           "type": "number"
         },
+        "tableAccuracyProportion": {
+          "description": "Table accuracy ratio in the table.",
+          "type": "string"
+        },
         "createDateTime": {
           "description": "Table creation time.",
           "type": "string",

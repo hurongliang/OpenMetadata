@@ -46,6 +46,11 @@ TABLE_CUSTOM_ATTR = [
         "propertyType": {"id": "INT_TYPE", "type": "type"},
     },
     {
+        "name": "tableAccuracyProportion",
+        "description": "Table Accuracy Proportion.",
+        "propertyType": {"id": "STRING_TYPE", "type": "type"},
+    },
+    {
         "name": "completenessPercent",
         "description": "The percentage of completeness for this data set.",
         "propertyType": {"id": "INT_TYPE", "type": "type"},
