@@ -139,7 +139,6 @@ class AbstractTableMetricComputer(ABC):
                 logger.info(f"asdict: {a_dict}")
             except AttributeError:
                 logger.error(f"asdict failed, int_val {int_val} type: {type(int_val)}")
-                
             int_val = int(val[0])
         else:
             logger.info(f"unknown val type = {type(val)}")
@@ -149,16 +148,16 @@ class AbstractTableMetricComputer(ABC):
     
     def _get_accuracy_ratio(self, col_name: str) -> Optional[float]:
         col = Column(col_name)
-        total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())
-        count1 = self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())
-        count2 = self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())
-        count3 = self.runner.select_first_from_table(Metrics.ACCURACY_DATE_COUNT(col=col).fn())
-        count4 = self.runner.select_first_from_table(Metrics.ACCURACY_EMAIL_COUNT(col=col).fn())
-        count5 = self.runner.select_first_from_table(Metrics.ACCURACY_IDNUMBER_COUNT(col=col).fn())
-        count6 = self.runner.select_first_from_table(Metrics.ACCURACY_IPADDRESS_COUNT(col=col).fn())
-        count7 = self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())
-        count8 = self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())
-        count9 = self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())
+        total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())[0]
+        count1 = self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())[0]
+        count2 = self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())[0]
+        count3 = self.runner.select_first_from_table(Metrics.ACCURACY_DATE_COUNT(col=col).fn())[0]
+        count4 = self.runner.select_first_from_table(Metrics.ACCURACY_EMAIL_COUNT(col=col).fn())[0]
+        count5 = self.runner.select_first_from_table(Metrics.ACCURACY_IDNUMBER_COUNT(col=col).fn())[0]
+        count6 = self.runner.select_first_from_table(Metrics.ACCURACY_IPADDRESS_COUNT(col=col).fn())[0]
+        count7 = self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())[0]
+        count8 = self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())[0]
+        count9 = self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())[0]
         counts = [count1, count2, count3, count4, count5, count6, count7, count8, count9]
         logger.info(f"total_count: {total_count}")
         logger.info(f"counts: {counts}")
