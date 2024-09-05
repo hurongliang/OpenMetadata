@@ -151,7 +151,7 @@ class AbstractTableMetricComputer(ABC):
             self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())[0],
             self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())[0]
         ]
-        logger.info(f"counts: {counts}")
+        logger.debug(f"counts: {counts}")
 
         total_count = self._to_int(total_count)
         max_count = 0
@@ -162,7 +162,7 @@ class AbstractTableMetricComputer(ABC):
             if cur_count_int > max_count:
                 max_count = cur_count_int
         max_ratio = max_count / total_count
-        logger.info(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {max_ratio}")
+        logger.debug(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {max_ratio}")
 
         return max_ratio
     
@@ -181,7 +181,7 @@ class AbstractTableMetricComputer(ABC):
                 accuracy_ratio = 0
             else:
                 accuracy_ratio = sum(all_ratio) / len(all_ratio)
-        logger.info(f"Table = {table_name}, Accuracy proportion = {accuracy_ratio}")
+        logger.debug(f"Table = {table_name}, Accuracy proportion = {accuracy_ratio}")
         # format as percent
         return f"{accuracy_ratio:.2%}"
 

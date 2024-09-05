@@ -88,7 +88,7 @@ class AccuracyRatio(ComposedMetric):
         
         ratio = max_count / total_count
         if ratio >= 0.5:
-            logger.info(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
+            logger.debug(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
             return ratio
         return 0
 
