@@ -419,8 +419,6 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
         """compute table metrics for mysql"""
         logger.info("Computing table metrics for MySQL")
         col_names_and_count = self._get_col_names_and_count()
-        print(f"col_names_and_count: {col_names_and_count}")
-
         columns = [
             Column("TABLE_ROWS").label(ROW_COUNT),
             (Column("data_length") + Column("index_length")).label(SIZE_IN_BYTES),
@@ -444,7 +442,6 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
             # if we don't have any row count, fallback to the base logic
             return super().compute()
         res = res._asdict()
-        print(f"res after computing: {res}")
         # innodb row count is an estimate we need to patch the row count with COUNT(*)
         # https://dev.mysql.com/doc/refman/8.3/en/information-schema-innodb-tablestats-table.html
         row_count = self.runner.select_first_from_table(Metrics.ROW_COUNT().fn())
