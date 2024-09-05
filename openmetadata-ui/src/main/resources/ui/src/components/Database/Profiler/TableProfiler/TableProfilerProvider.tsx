@@ -145,6 +145,14 @@ export const TableProfilerProvider = ({
         value: bytesToSize(profile?.sizeInByte ?? 0),
       },
       {
+        title: t('label.profile-table-accuracy-proportion'),
+        value: profile?.tableAccuracyProportion ?? '0.00%',
+      },
+      {
+        title: t('label.size'),
+        value: bytesToSize(profile?.sizeInByte ?? 0),
+      },
+      {
         title: t('label.created-date'),
         value: profile?.createDateTime
           ? DateTime.fromJSDate(new Date(profile?.createDateTime))
