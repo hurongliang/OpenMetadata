@@ -168,19 +168,19 @@ class AbstractTableMetricComputer(ABC):
     
     def _get_table_accuracy_proportion(self, table_name, col_names) -> float:
         """get accuracy proportion from table"""
-        logger.info("Computing accuracy proportion")
         if not col_names:
-            return "0.00%"
-        col_names = col_names.split(",")
-        all_ratio = []
-        for col_name in col_names:
-            cur_ratio = self._get_accuracy_ratio(col_name)
-            if cur_ratio is not None:
-                all_ratio.append(cur_ratio)
-        if len(all_ratio) == 0:
             accuracy_ratio = 0
         else:
-            accuracy_ratio = sum(all_ratio) / len(all_ratio)
+            col_names = col_names.split(",")
+            all_ratio = []
+            for col_name in col_names:
+                cur_ratio = self._get_accuracy_ratio(col_name)
+                if cur_ratio is not None:
+                    all_ratio.append(cur_ratio)
+            if len(all_ratio) == 0:
+                accuracy_ratio = 0
+            else:
+                accuracy_ratio = sum(all_ratio) / len(all_ratio)
         logger.info(f"Table = {table_name}, Accuracy proportion = {accuracy_ratio}")
         # format as percent
         return f"{accuracy_ratio:.2%}"
