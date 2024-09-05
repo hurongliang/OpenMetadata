@@ -128,25 +128,27 @@ class AbstractTableMetricComputer(ABC):
         return col_names, col_count
     
     def _to_int(self, val):
-        logger.info(f"val {val} type: {type(val)}")
-        new_val = val
-        if isinstance(new_val, Row):
-            new_val = new_val[0]
-        try:
-            a_dict = new_val._asdict()
-            new_val = next(iter(a_dict.values()), None)
-        except AttributeError:
-            logger.error(f"asdict failed, new_val {new_val} type: {type(new_val)}")
-        logger.info(f"new_val {new_val} type: {type(new_val)}")
-        if new_val is None:
-            new_val = 0
-        new_val = int(new_val)
-        logger.info(f"original val: {val}, new_val: {new_val}")
-        return new_val
+        int_val = 0
+        if val is None:
+            logger.info("val is None")
+            int_val = 0
+        elif isinstance(val, Row):
+            logger.info(f"val is Row: {val}")
+            try:
+                a_dict = int_val._asdict()
+                logger.info(f"asdict: {a_dict}")
+            except AttributeError:
+                logger.error(f"asdict failed, int_val {int_val} type: {type(int_val)}")
+                
+            int_val = int(val[0])
+        else:
+            logger.info(f"unknown val type = {type(val)}")
+            int_val = int(val)
+        logger.info(f"val = {val} val type = {type(val)}, to int = {int_val}")
+        return int_val
     
     def _get_accuracy_ratio(self, col_name: str) -> Optional[float]:
         col = Column(col_name)
-        logger.info(f"col_name {col_name}")
         total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())
         count1 = self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())
         count2 = self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())
@@ -157,22 +159,20 @@ class AbstractTableMetricComputer(ABC):
         count7 = self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())
         count8 = self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())
         count9 = self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())
-        total_count = self._to_int(total_count)
         counts = [count1, count2, count3, count4, count5, count6, count7, count8, count9]
         logger.info(f"total_count: {total_count}")
         logger.info(f"counts: {counts}")
+
+        total_count = self._to_int(total_count)
         max_count = 0
         if total_count is None or total_count == 0:
             return 0
         for cur_count in counts:
-            logger.info(f"cur_count: {cur_count}")
             cur_count_int = self._to_int(cur_count)
-            logger.info(f"cur_count_int: {cur_count_int}")
             if cur_count_int > max_count:
                 max_count = cur_count_int
-        logger.info(f"max_count: {max_count}")
         max_ratio = max_count / total_count
-        logger.info(f"ratio: {max_ratio}")
+        logger.info(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {max_ratio}")
         return max_ratio
     
     def _get_table_accuracy_proportion(self, col_names) -> float:
