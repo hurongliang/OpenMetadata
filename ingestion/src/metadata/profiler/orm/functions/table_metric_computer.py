@@ -128,38 +128,29 @@ class AbstractTableMetricComputer(ABC):
         return col_names, col_count
     
     def _to_int(self, val):
-        int_val = 0
         if val is None:
-            logger.info("val is None")
-            int_val = 0
-        elif isinstance(val, Row):
-            logger.info(f"val is Row: {val}")
-            try:
-                a_dict = int_val._asdict()
-                logger.info(f"asdict: {a_dict}")
-            except AttributeError:
-                logger.error(f"asdict failed, int_val {int_val} type: {type(int_val)}")
-            int_val = int(val[0])
-        else:
-            logger.info(f"unknown val type = {type(val)}")
-            int_val = int(val)
-        logger.info(f"val = {val} val type = {type(val)}, to int = {int_val}")
-        return int_val
+            return 0
+        
+        try:
+            return int(val)
+        except Exception as e:
+            logger.warning(f'Cannot convert to int for value {val} and type {type(val)}, set as 0')
+            return 0
     
     def _get_accuracy_ratio(self, col_name: str) -> Optional[float]:
         col = Column(col_name)
         total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())[0]
-        count1 = self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())[0]
-        count2 = self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())[0]
-        count3 = self.runner.select_first_from_table(Metrics.ACCURACY_DATE_COUNT(col=col).fn())[0]
-        count4 = self.runner.select_first_from_table(Metrics.ACCURACY_EMAIL_COUNT(col=col).fn())[0]
-        count5 = self.runner.select_first_from_table(Metrics.ACCURACY_IDNUMBER_COUNT(col=col).fn())[0]
-        count6 = self.runner.select_first_from_table(Metrics.ACCURACY_IPADDRESS_COUNT(col=col).fn())[0]
-        count7 = self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())[0]
-        count8 = self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())[0]
-        count9 = self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())[0]
-        counts = [count1, count2, count3, count4, count5, count6, count7, count8, count9]
-        logger.info(f"total_count: {total_count}")
+        counts = [
+            self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_DATE_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_EMAIL_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_IDNUMBER_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_IPADDRESS_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_PHONE_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_POSTCODE_COUNT(col=col).fn())[0],
+            self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())[0]
+        ]
         logger.info(f"counts: {counts}")
 
         total_count = self._to_int(total_count)
@@ -172,26 +163,25 @@ class AbstractTableMetricComputer(ABC):
                 max_count = cur_count_int
         max_ratio = max_count / total_count
         logger.info(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {max_ratio}")
+
         return max_ratio
     
-    def _get_table_accuracy_proportion(self, col_names) -> float:
+    def _get_table_accuracy_proportion(self, table_name, col_names) -> float:
         """get accuracy proportion from table"""
         logger.info("Computing accuracy proportion")
-        logger.info(f"Column names: {col_names}")
         if not col_names:
             return "0.00%"
         col_names = col_names.split(",")
         all_ratio = []
         for col_name in col_names:
             cur_ratio = self._get_accuracy_ratio(col_name)
-            logger.info(f"col_name: {col_name}, cur_ratio: {cur_ratio}")
-            if cur_ratio is not None and cur_ratio >= 0.5:
+            if cur_ratio is not None:
                 all_ratio.append(cur_ratio)
         if len(all_ratio) == 0:
             accuracy_ratio = 0
         else:
             accuracy_ratio = sum(all_ratio) / len(all_ratio)
-        logger.info(f"Table Accuracy proportion: {accuracy_ratio}")
+        logger.info(f"Table = {table_name}, Accuracy proportion = {accuracy_ratio}")
         # format as percent
         return f"{accuracy_ratio:.2%}"
 
@@ -461,7 +451,7 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
         res.update({ROW_COUNT: row_count.rowCount})
         columnNames = res.get(COLUMN_NAMES, '')
         try:
-            res.update({TABLE_ACCURACY_PROPORTION: self._get_table_accuracy_proportion(columnNames)})
+            res.update({TABLE_ACCURACY_PROPORTION: self._get_table_accuracy_proportion(self.table_name, columnNames)})
         except Exception as exc:
             logger.error(f"Error computing table accuracy proportion: {str(exc)}", exc_info=True)
         return res
