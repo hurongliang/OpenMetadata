@@ -174,10 +174,11 @@ class AbstractTableMetricComputer(ABC):
         if not col_names:
             return "100%"
         col_names = col_names.split(",")
-        min_ratio = 0
+        min_ratio = None
         for col_name in col_names:
             cur_ratio = self._get_accuracy_ratio(col_name)
-            min_ratio = min(min_ratio, cur_ratio)
+            if min_ratio is None or cur_ratio < min_ratio:
+                min_ratio = cur_ratio
         logger.debug(f"Table = {table_name}, Accuracy proportion = {min_ratio}")
         return f"{min_ratio:.2%}"
 
