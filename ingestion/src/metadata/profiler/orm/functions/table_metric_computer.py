@@ -140,6 +140,10 @@ class AbstractTableMetricComputer(ABC):
     def _get_accuracy_ratio(self, col_name: str) -> Optional[float]:
         col = Column(col_name)
         total_count = self.runner.select_first_from_table(Metrics.COUNT(col=col).fn())[0]
+        total_count = self._to_int(total_count)
+        if not total_count:
+            return 1
+        
         counts = [
             self.runner.select_first_from_table(Metrics.ACCURACY_BANKCARDNUMBER_COUNT(col=col).fn())[0],
             self.runner.select_first_from_table(Metrics.ACCURACY_CHINESENAME_COUNT(col=col).fn())[0],
@@ -152,38 +156,30 @@ class AbstractTableMetricComputer(ABC):
             self.runner.select_first_from_table(Metrics.ACCURACY_URL_COUNT(col=col).fn())[0]
         ]
         logger.debug(f"counts: {counts}")
-
-        total_count = self._to_int(total_count)
+        
         max_count = 0
-        if total_count is None or total_count == 0:
-            return 0
         for cur_count in counts:
             cur_count_int = self._to_int(cur_count)
             if cur_count_int > max_count:
                 max_count = cur_count_int
-        max_ratio = max_count / total_count
-        logger.debug(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {max_ratio}")
-
-        return max_ratio
+        ratio = max_count / total_count
+        if ratio >= 0.5:
+            logger.debug(f"col_name = {col_name}, total_count = {total_count}, accuracy count = {max_count}, accuracy ratio = {ratio}")
+            return ratio
+        else:
+            return 1
     
     def _get_table_accuracy_proportion(self, table_name, col_names) -> float:
         """get accuracy proportion from table"""
         if not col_names:
-            accuracy_ratio = 0
-        else:
-            col_names = col_names.split(",")
-            all_ratio = []
-            for col_name in col_names:
-                cur_ratio = self._get_accuracy_ratio(col_name)
-                if cur_ratio is not None:
-                    all_ratio.append(cur_ratio)
-            if len(all_ratio) == 0:
-                accuracy_ratio = 0
-            else:
-                accuracy_ratio = sum(all_ratio) / len(all_ratio)
-        logger.debug(f"Table = {table_name}, Accuracy proportion = {accuracy_ratio}")
-        # format as percent
-        return f"{accuracy_ratio:.2%}"
+            return "100%"
+        col_names = col_names.split(",")
+        min_ratio = 0
+        for col_name in col_names:
+            cur_ratio = self._get_accuracy_ratio(col_name)
+            min_ratio = min(min_ratio, cur_ratio)
+        logger.debug(f"Table = {table_name}, Accuracy proportion = {min_ratio}")
+        return f"{min_ratio:.2%}"
 
     def _build_query(
         self,

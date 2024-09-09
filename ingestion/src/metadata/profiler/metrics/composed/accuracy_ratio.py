@@ -76,7 +76,7 @@ class AccuracyRatio(ComposedMetric):
         count9 = 'postcode', res.get(AccuracyPostCodeCount.name())
         count10 = 'url', res.get(AccuracyUrlCount.name())
         if not total_count:
-            return None
+            return 1
         
         max_count = 0
         max_type = None
@@ -90,5 +90,5 @@ class AccuracyRatio(ComposedMetric):
         if ratio >= 0.5:
             logger.debug(f"ratio: {ratio}, total count: {total_count}, max_count: {max_count}, max_type: {max_type}")
             return ratio
-        return 0
+        return 1
 
