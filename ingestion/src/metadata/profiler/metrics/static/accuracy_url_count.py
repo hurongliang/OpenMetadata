@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyUrlCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for URL
     """
 
     expression = r"^(http|https|ftp)://[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.[a-zA-Z]{2,}(:[0-9]{1,5})?(/.*)?$"

@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyChineseNameCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for Chinese Name
     """
 
     expression = r"^[\u4e00-\u9fa5]{2,3}$"

@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyAddressCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for Address
     """
 
     expression = r"^.+?(省|市|区|县).{3,}$"

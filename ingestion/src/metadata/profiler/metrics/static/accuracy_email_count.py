@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyEmailCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for Email
     """
 
     expression = r"^([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})(\s*[,;]?\s*[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})*$"

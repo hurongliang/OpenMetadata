@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyPostCodeCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for post code
     """
 
     expression = r"^[1-9]\\d{5}$"

@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyPhoneCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for Phone Number
     """
 
     expression = r"/^1[3|4|5|7|8][0-9]{9}$/"

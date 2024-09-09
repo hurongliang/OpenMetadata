@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyDateCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+   Accuracy Count Metric for Date
     """
 
     expression = r"^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}|\d{4}-\d{2}-\d{2}|\d{2}:\d{2}:\d{2}|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}|\d{4}年\d{1,2}月\d{1,2}日)$"

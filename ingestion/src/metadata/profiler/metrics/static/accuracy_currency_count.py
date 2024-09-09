@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyCurrencyCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for Currency
     """
 
     expression = r"^(¥|CNY|US$|USD|HK\$|HKD|€|EUR|£|GBP|JP¥|JPY)?(\d+|\d{1,3}(,\d{3})*)(\.\d{1,2})?$"

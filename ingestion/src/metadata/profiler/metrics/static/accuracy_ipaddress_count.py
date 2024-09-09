@@ -26,7 +26,7 @@ logger = profiler_logger()
 
 class AccuracyIpAddressCount(StaticMetric):
     """
-    ACCURACY_COUNT Metric
+    Accuracy Count Metric for IP Address
     """
 
     expression = r"^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
