@@ -29,6 +29,7 @@ const metrics = [
   'accuracyPostCodeCount',
   'accuracyUrlCount',
   'accuracyProportion',
+  'consistencyProportion',
   'duplicateCount',
   'firstQuartile',
   'histogram',

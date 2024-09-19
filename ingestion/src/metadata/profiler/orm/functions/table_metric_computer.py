@@ -38,6 +38,7 @@ ROW_COUNT = Metrics.ROW_COUNT().name()
 SIZE_IN_BYTES = "sizeInBytes"
 CREATE_DATETIME = "createDateTime"
 TABLE_ACCURACY_PROPORTION = "tableAccuracyProportion"
+TABLE_CONSISTENCY_PROPORTION = "tableConsistencyProportion"
 
 ERROR_MSG = (
     "Schema/Table name not found in table args. Falling back to default computation"
@@ -445,7 +446,10 @@ class MySQLTableMetricComputer(BaseTableMetricComputer):
         res.update({ROW_COUNT: row_count.rowCount})
         columnNames = res.get(COLUMN_NAMES, '')
         try:
-            res.update({TABLE_ACCURACY_PROPORTION: self._get_table_accuracy_proportion(self.table_name, columnNames)})
+            res.update({
+                TABLE_ACCURACY_PROPORTION: self._get_table_accuracy_proportion(self.table_name, columnNames),
+                TABLE_CONSISTENCY_PROPORTION: '100%'
+            })
         except Exception as exc:
             logger.error(f"Error computing table accuracy proportion: {str(exc)}", exc_info=True)
         return res

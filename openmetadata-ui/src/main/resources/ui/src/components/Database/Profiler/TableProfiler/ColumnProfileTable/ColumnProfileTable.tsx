@@ -226,6 +226,21 @@ const ColumnProfileTable = () => {
           (col2.profile?.accuracyProportion || 0),
       },
       {
+        title: `${t('label.consistency')} %`,
+        dataIndex: 'profile',
+        key: 'consistencyProportion',
+        width: 200,
+        render: (profile: ColumnProfile) => (
+          <ProfilerProgressWidget
+            strokeColor="#4E8B9C"
+            value={profile?.consistencyProportion || 0}
+          />
+        ),
+        sorter: (col1, col2) =>
+          (col1.profile?.consistencyProportion || 0) -
+          (col2.profile?.consistencyProportion || 0),
+      },
+      {
         title: t('label.value-count'),
         dataIndex: 'profile',
         key: 'valuesCount',

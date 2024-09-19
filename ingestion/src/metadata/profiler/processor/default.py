@@ -61,6 +61,7 @@ def get_default_metrics(
         Metrics.ACCURACY_POSTCODE_COUNT.value,
         Metrics.ACCURACY_URL_COUNT.value,
         Metrics.ACCURACY_RATIO.value,
+        Metrics.CONSISTENCY_RATIO.value,
         Metrics.MIN.value,
         Metrics.MAX.value,
         Metrics.NULL_COUNT.value,

@@ -149,6 +149,10 @@ export const TableProfilerProvider = ({
         value: profile?.tableAccuracyProportion ?? '0.00%',
       },
       {
+        title: t('label.profile-table-consistency-proportion'),
+        value: profile?.tableConsistencyProportion ?? '100%',
+      },
+      {
         title: t('label.size'),
         value: bytesToSize(profile?.sizeInByte ?? 0),
       },

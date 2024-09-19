@@ -20,6 +20,7 @@ having the verbosely pass .value all the time...
 """
 from metadata.profiler.metrics.composed.distinct_ratio import DistinctRatio
 from metadata.profiler.metrics.composed.accuracy_ratio import AccuracyRatio
+from metadata.profiler.metrics.composed.consistency_ratio import ConsistencyRatio
 from metadata.profiler.metrics.composed.duplicate_count import DuplicateCount
 from metadata.profiler.metrics.composed.ilike_ratio import ILikeRatio
 from metadata.profiler.metrics.composed.iqr import InterQuartileRange
@@ -91,6 +92,7 @@ class Metrics(MetricRegistry):
     ACCURACY_POSTCODE_COUNT = AccuracyPostCodeCount
     ACCURACY_URL_COUNT = AccuracyUrlCount
     ACCURACY_RATIO = AccuracyRatio
+    CONSISTENCY_RATIO = ConsistencyRatio
     ILIKE_COUNT = ILikeCount
     LIKE_COUNT = LikeCount
     NOT_LIKE_COUNT = NotLikeCount

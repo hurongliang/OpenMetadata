@@ -129,6 +129,7 @@ slug: /main-concepts/metadata-standard/schemas/entity/data/table
   - **`distinctCount`** *(number)*: Number of values that contain distinct values.
   - **`distinctProportion`** *(number)*: Proportion of distinct values in a column.
   - **`accuracyProportion`** *(number)*: Proportion of accuracy values in a column.
+  - **`consistencyProportion`** *(number)*: Proportion of consistency values in a column.
   - **`min`**: Minimum value in a column.
   - **`max`**: Maximum value in a column.
   - **`minLength`** *(number)*: Minimum string length in a column.

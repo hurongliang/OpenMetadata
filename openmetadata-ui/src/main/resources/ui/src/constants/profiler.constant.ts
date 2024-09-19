@@ -49,6 +49,7 @@ export const excludedMetrics = [
   'missingPercentage',
   'distinctProportion',
   'accuracyProportion',
+  'consistencyProportion',
 ];
 
 export const PROFILER_METRIC = [
@@ -76,6 +77,7 @@ export const PROFILER_METRIC = [
   'accuracyPostCodeCount',
   'accuracyUrlCount',
   'accuracyProportion',
+  'consistencyProportion',
   'min',
   'max',
   'minLength',
@@ -196,6 +198,13 @@ export const INITIAL_PROPORTION_METRIC_VALUE = {
         entity: t('label.accuracy'),
       }),
       dataKey: 'accuracyProportion',
+      color: '#1890FF',
+    },
+    {
+      title: t('label.entity-proportion', {
+        entity: t('label.consistency'),
+      }),
+      dataKey: 'consistencyProportion',
       color: '#1890FF',
     },
     {

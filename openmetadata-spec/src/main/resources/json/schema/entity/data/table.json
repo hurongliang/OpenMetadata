@@ -565,6 +565,10 @@
           "description": "Proportion of accuracy values in a column.",
           "type": "number"
         },
+        "consistencyProportion": {
+          "description": "Proportion of consistency values in a column.",
+          "type": "number"
+        },
         "min": {
           "description": "Minimum value in a column.",
           "oneOf": [
@@ -856,6 +860,10 @@
         },
         "tableAccuracyProportion": {
           "description": "Table accuracy ratio in the table.",
+          "type": "string"
+        },
+        "tableConsistencyProportion": {
+          "description": "Table consistency ratio in the table.",
           "type": "string"
         },
         "createDateTime": {
