@@ -52,6 +52,7 @@ import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.csv.CSVPrinter;
 import org.apache.commons.csv.CSVRecord;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.jdbi.v3.sqlobject.transaction.Transaction;
@@ -94,6 +95,7 @@ import org.openmetadata.service.exception.EntityNotFoundException;
 import org.openmetadata.service.jdbi3.CollectionDAO.ExtensionRecord;
 import org.openmetadata.service.jdbi3.FeedRepository.TaskWorkflow;
 import org.openmetadata.service.jdbi3.FeedRepository.ThreadContext;
+import org.openmetadata.service.resources.custom.CustomResource;
 import org.openmetadata.service.resources.databases.DatabaseUtil;
 import org.openmetadata.service.resources.databases.TableResource;
 import org.openmetadata.service.resources.feeds.MessageParser.EntityLink;
@@ -104,6 +106,8 @@ import org.openmetadata.service.util.FullyQualifiedName;
 import org.openmetadata.service.util.JsonUtils;
 import org.openmetadata.service.util.RestUtil;
 import org.openmetadata.service.util.ResultList;
+
+import javax.ws.rs.WebApplicationException;
 
 @Slf4j
 public class TableRepository extends EntityRepository<Table> {
@@ -573,6 +577,49 @@ public class TableRepository extends EntityRepository<Table> {
     }
 
     return table;
+  }
+
+  public Table updateLatestTableProfile(UUID tableId, CreateTableProfile createTableProfile) {
+    Table table = find(tableId, NON_DELETED);
+    TableProfile tableProfile =
+            JsonUtils.readValue(
+                    daoCollection
+                            .profilerDataTimeSeriesDao()
+                            .getLatestExtension(table.getFullyQualifiedName(), TABLE_PROFILE_EXTENSION),
+                    TableProfile.class);
+    if (tableProfile != null) {
+      tableProfile.setTableConsistencyProportion(createTableProfile.getTableProfile().getTableConsistencyProportion());
+      daoCollection
+              .profilerDataTimeSeriesDao()
+              .update(
+                      table.getFullyQualifiedName(),
+                      TABLE_PROFILE_EXTENSION,
+                      JsonUtils.pojoToJson(tableProfile), tableProfile.getTimestamp());
+    }
+
+    for (Column column : table.getColumns()) {
+      ColumnProfile columnProfile =
+              JsonUtils.readValue(
+                      daoCollection
+                              .profilerDataTimeSeriesDao()
+                              .getLatestExtension(
+                                      column.getFullyQualifiedName(), TABLE_COLUMN_PROFILE_EXTENSION),
+                      ColumnProfile.class);
+      if (columnProfile != null) {
+        ColumnProfile updateValue = createTableProfile.getColumnProfile().stream().filter(updateCustomProfile -> updateCustomProfile.getName().equals(column.getName())).findFirst().orElse(null);
+        if (updateValue != null) {
+          columnProfile.setConsistencyProportion(updateValue.getConsistencyProportion());
+          daoCollection
+                  .profilerDataTimeSeriesDao()
+                  .update(
+                          column.getFullyQualifiedName(),
+                          TABLE_COLUMN_PROFILE_EXTENSION,
+                          JsonUtils.pojoToJson(columnProfile), columnProfile.getTimestamp());
+        }
+      }
+    }
+
+    return this.getLatestTableProfile(table.getFullyQualifiedName(), false);
   }
 
   public Table addCustomMetric(UUID tableId, CustomMetric customMetric) {
